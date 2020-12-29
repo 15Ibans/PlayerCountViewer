@@ -3,12 +3,11 @@
     <head>
         <?php
         $raw_json = file_get_contents("./2020-12-26.json");
-        $raw_json = str_replace("\n", "", $raw_json);
+        $minified =  json_encode(json_decode($raw_json));
         ?>
         <script src="./dist/Chart.min.js"></script>
         <canvas id="myChart" width="400" height="400"></canvas>
         <script>
-
             function timeFromUnix(timestamp) {
                 let date = new Date(parseFloat(timestamp) * 1000);
                 return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds(); 
@@ -26,7 +25,7 @@
                     let playerCount = Object.keys(input[label]).map(function (key) {
                         return input[label][key];
                     });
-                    ret += "{\"label\": \"" + label + "\", \"backgroundColor\": \"" + randomColor() + "\", \"data\": " + JSON.stringify(playerCount) + "}";
+                    ret += "{\"label\": \"" + label + "\", \"borderColor\": \"" + randomColor() + "\", \"data\": " + JSON.stringify(playerCount) + "}";
                     if (i !== Object.keys(input).length - 1) {
                         ret += ",";
                     }
@@ -38,7 +37,7 @@
 
             let ctx = document.getElementById("myChart").getContext("2d");
 
-            let theData = JSON.parse('<?php echo $raw_json;?>');
+            let theData = JSON.parse('<?php echo $minified;?>');
             let lineChart = new Chart(ctx, {
                 type: "line",
                 data: {
